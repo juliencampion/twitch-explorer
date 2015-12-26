@@ -2,8 +2,13 @@
 <html ng-app="twitchApp">
     <head>
         <meta charset="utf-8">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
         <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="script.js"></script>
     </head>
     <body ng-controller="twitchController">
         <iframe id="twitch-player"
@@ -13,9 +18,17 @@
             allowfullscreen>
         </iframe>
 
-        <p ng-show="updatingStream">Switching streams...</p>
-        <p ng-hide="updatingStream">Switching streams in {{remainingTime() | number : 0}} seconds...</p>
+        <div ng-show="updatingStream">
+            <p>Switching streams...</p>
+        </div>
+        <div ng-hide="updatingStream">
+            <h1>{{selectedStream.channel.display_name}}</h1>
+            <h2>{{selectedStream.channel.status}}</h2>
+            <h3>{{selectedStream.channel.game}}</h3>
 
-        <script src="script.js"></script>
+            <button ng-click="updateStream()">Switch streams</button>
+
+            <p>Switching streams in {{remainingTime() | number : 0}} seconds...</p>
+        </div>
     </body>
 </html>

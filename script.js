@@ -8,7 +8,7 @@ twitchApp.filter('trusted', ['$sce', function ($sce) {
     };
 }]);
 
-twitchApp.controller('twitchController', ['$scope', '$interval', function ($scope, $interval) {
+twitchApp.controller('twitchController', ['$scope', '$interval', '$http', function ($scope, $interval, $http) {
     function selectRandomStream (streams) {
         var viewersTotal = 0;
         for (var stream of streams) {
@@ -30,23 +30,24 @@ twitchApp.controller('twitchController', ['$scope', '$interval', function ($scop
         return selectedStream;
     }
 
-    function updateStream () {
+    $scope.updateStream = function () {
         $scope.updatingStream = true;
-        $.get('https://api.twitch.tv/kraken/streams?limit=100', {}, function (data) {
-                var selectedStream = selectRandomStream(data.streams);
+        $http.get('https://api.twitch.tv/kraken/streams?limit=100', {}).then(function (response) {
+                var selectedStream = selectRandomStream(response.data.streams);
                 while ($scope.selectedStream && $scope.selectedStream.channel.display_name === selectedStream.channel.display_name) {
-                    selectedStream = selectRandomStream(data.streams);
+                    selectedStream = selectRandomStream(response.data.streams);
                 }
 
                 $scope.selectedStream = selectedStream;
                 $scope.updatingStream = false;
                 $scope.lastStreamUpdate = new Date();
+                console.log(selectedStream);
                 });
     }
 
     function updateTimer () {
         if (!$scope.updatingStream && $scope.remainingTime() <= 0)
-            updateStream();
+            $scope.updateStream();
     }
 
     $scope.updatingStream = false;
@@ -55,6 +56,6 @@ twitchApp.controller('twitchController', ['$scope', '$interval', function ($scop
         return 60 - (new Date() - $scope.lastStreamUpdate) / 1000;
     };
 
-    updateStream();
+    $scope.updateStream();
     $interval(updateTimer, 1000);
 }]);
