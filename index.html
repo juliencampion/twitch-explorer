@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html ng-app="twitchApp">
+    <head>
+        <meta charset="utf-8">
+        <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    </head>
+    <body ng-controller="twitchController">
+        <iframe id="twitch-player"
+                ng-src="{{'http://player.twitch.tv/?channel=' + selectedStream.channel.display_name | trusted}}"
+            height="720"
+            width="1280"
+            allowfullscreen>
+        </iframe>
+
+        <p ng-show="updatingStream">Switching streams...</p>
+
+        <p ng-hide="updatingStream">Switching streams in {{timer}} seconds...</p>
+
+        <script src="script.js"></script>
+    </body>
+</html>
