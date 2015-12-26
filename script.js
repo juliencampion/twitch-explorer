@@ -57,15 +57,19 @@ twitchApp.controller('twitchController', ['$scope', '$interval', '$http', functi
     }
 
     function updateTimer () {
-        if (!$scope.updatingStream && $scope.remainingTime() <= 0)
+        if ($scope.autoSwitch && !$scope.updatingStream && $scope.remainingTime() <= 0)
             $scope.updateStream();
     }
 
     $scope.updatingStream = false;
 
     $scope.remainingTime = function () {
-        return 60 - (new Date() - $scope.lastStreamUpdate) / 1000;
+        return $scope.autoSwitchDelay - (new Date() - $scope.lastStreamUpdate) / 1000;
     };
+
+    $scope.autoSwitch = true;
+
+    $scope.autoSwitchDelay = 60;
 
     $scope.updateStream();
     $interval(updateTimer, 1000);
