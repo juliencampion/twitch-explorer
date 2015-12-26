@@ -30,16 +30,13 @@ twitchApp.controller('twitchController', ['$scope', '$interval', function ($scop
         return selectedStream;
     }
 
-    var oldStream;
-
     function updateStream () {
         $scope.updatingStream = true;
         $.get('https://api.twitch.tv/kraken/streams?limit=100', {}, function (data) {
                 var selectedStream = selectRandomStream(data.streams);
-                while (oldStream && oldStream.channel.display_name === selectedStream.channel.display_name) {
+                while ($scope.selectedStream && $scope.selectedStream.channel.display_name === selectedStream.channel.display_name) {
                     selectedStream = selectRandomStream(data.streams);
                 }
-                oldStream = selectedStream;
 
                 $scope.selectedStream = selectedStream;
                 $scope.updatingStream = false;
