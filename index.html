@@ -4,6 +4,7 @@
         <meta charset="utf-8">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css">
 
         <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -12,23 +13,33 @@
     </head>
     <body ng-controller="twitchController">
         <iframe id="twitch-player"
+                class="center-block"
                 ng-src="{{'http://player.twitch.tv/?channel=' + selectedStream.channel.display_name | trusted}}"
-            height="720"
-            width="1280"
-            allowfullscreen>
+                height="720"
+                width="1280"
+                allowfullscreen>
         </iframe>
 
-        <div ng-show="updatingStream">
-            <p>Switching streams...</p>
+        <div id="stream-info" class="bg-info">
+            <div ng-show="updatingStream">
+                <p class="center-block">Switching streams...</p>
+            </div>
+            <div ng-hide="updatingStream" class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><span class="glyphicon glyphicon-user"></span> {{selectedStream.channel.display_name}}</p>
+                        <p><span class="glyphicon glyphicon-tag"></span> {{selectedStream.channel.status | myLimit : 55}}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><span class="glyphicon glyphicon-off"></span> {{selectedStream.channel.game}}</p>
+                        <p><span class="glyphicon glyphicon-eye-open"></span> {{selectedStream.viewers}}</p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div ng-hide="updatingStream">
-            <h1>{{selectedStream.channel.display_name}}</h1>
-            <h2>{{selectedStream.channel.status}}</h2>
-            <h3>{{selectedStream.channel.game}}</h3>
 
-            <button ng-click="updateStream()">Switch streams</button>
+        <button ng-click="updateStream()">Switch streams</button>
 
-            <p>Switching streams in {{remainingTime() | number : 0}} seconds...</p>
-        </div>
+        <p>Switching streams in {{remainingTime() | number : 0}} seconds...</p>
     </body>
 </html>

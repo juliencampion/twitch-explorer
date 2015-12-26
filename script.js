@@ -8,6 +8,17 @@ twitchApp.filter('trusted', ['$sce', function ($sce) {
     };
 }]);
 
+twitchApp.filter('myLimit', ['$filter', function ($filter) {
+    return function (text, nbChars) {
+        var newText = new String(text);
+        var result = $filter('limitTo')(text, nbChars);
+        if (newText.length > nbChars)
+            result += '...';
+
+        return result;
+    };
+}]);
+
 twitchApp.controller('twitchController', ['$scope', '$interval', '$http', function ($scope, $interval, $http) {
     function selectRandomStream (streams) {
         var viewersTotal = 0;
