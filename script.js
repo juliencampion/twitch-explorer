@@ -32,33 +32,32 @@ twitchApp.controller('twitchController', ['$scope', '$interval', function ($scop
 
     var oldStream;
 
-    $scope.updatingStream = false;
     function updateStream () {
         $scope.updatingStream = true;
         $.get('https://api.twitch.tv/kraken/streams?limit=100', {}, function (data) {
-                console.log(data.streams);
                 var selectedStream = selectRandomStream(data.streams);
                 while (oldStream && oldStream.channel.display_name === selectedStream.channel.display_name) {
                     selectedStream = selectRandomStream(data.streams);
                 }
                 oldStream = selectedStream;
 
-                //$('#twitch-player').attr('src', 'http://player.twitch.tv/?channel=' + selectedStream.channel.display_name);
                 $scope.selectedStream = selectedStream;
-                $scope.streamName = selectedStream.channel.display_name;
                 $scope.updatingStream = false;
+                $scope.lastStreamUpdate = new Date();
                 });
     }
 
-    $scope.timer = 0;
     function updateTimer () {
-        if ($scope.timer === 0) {
-            $scope.timer = 60;
+        if (!$scope.updatingStream && $scope.remainingTime() <= 0)
             updateStream();
-        } else {
-            $scope.timer--;
-        }
     }
 
+    $scope.updatingStream = false;
+
+    $scope.remainingTime = function () {
+        return 60 - (new Date() - $scope.lastStreamUpdate) / 1000;
+    };
+
+    updateStream();
     $interval(updateTimer, 1000);
 }]);

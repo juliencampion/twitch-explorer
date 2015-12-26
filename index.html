@@ -14,8 +14,7 @@
         </iframe>
 
         <p ng-show="updatingStream">Switching streams...</p>
-
-        <p ng-hide="updatingStream">Switching streams in {{timer}} seconds...</p>
+        <p ng-hide="updatingStream">Switching streams in {{remainingTime() | number : 0}} seconds...</p>
 
         <script src="script.js"></script>
     </body>
