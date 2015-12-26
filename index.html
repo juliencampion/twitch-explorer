@@ -20,26 +20,36 @@
                 allowfullscreen>
         </iframe>
 
-        <div id="stream-info" class="bg-info">
-            <div ng-show="updatingStream">
-                <p class="center-block">Switching streams...</p>
+        <div id="stream-info" class="panel panel-info">
+            <div class="panel-heading">
+                <h1 class="text-center" ng-show="updatingStream">Switching streams...</h1>
+                <h3 class="text-center" ng-hide="updatingStream">Stream information</h3>
             </div>
-            <div ng-hide="updatingStream" class="container-fluid">
-                <div class="row">
-                    <div class="col-md-6">
-                        <p><span class="glyphicon glyphicon-user"></span> {{selectedStream.channel.display_name}}</p>
-                        <p><span class="glyphicon glyphicon-tag"></span> {{selectedStream.channel.status | myLimit : 55}}</p>
-                    </div>
-                    <div class="col-md-6">
-                        <p><span class="glyphicon glyphicon-off"></span> {{selectedStream.channel.game}}</p>
-                        <p><span class="glyphicon glyphicon-eye-open"></span> {{selectedStream.viewers}}</p>
+            <div class="panel-content" ng-hide="updatingStream">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><span class="glyphicon glyphicon-user"></span> {{selectedStream.channel.display_name}}</p>
+                            <p><span class="glyphicon glyphicon-tag"></span> {{selectedStream.channel.status | myLimit : 55}}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><span class="glyphicon glyphicon-off"></span> {{selectedStream.channel.game}}</p>
+                            <p><span class="glyphicon glyphicon-eye-open"></span> {{selectedStream.viewers}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <button ng-click="updateStream()">Switch streams</button>
+        <button class="btn btn-primary center-block" ng-click="updateStream()">Switch streams</button>
 
-        <p>Switching streams in {{remainingTime() | number : 0}} seconds...</p>
+        <div id="view-options" class="panel panel-default">
+            <div class="panel-heading">
+                <h3>Viewing options</h3>
+            </div>
+            <div class="panel-content">
+                <p>Switching streams in {{remainingTime() | number : 0}} seconds...</p>
+            </div>
+        </div>
     </body>
 </html>
