@@ -20,40 +20,47 @@ twitchApp.filter('myLimit', ['$filter', function ($filter) {
 }]);
 
 twitchApp.controller('twitchController', ['$scope', '$interval', '$http', function ($scope, $interval, $http) {
-    function selectRandomStream (streams) {
-        var viewersTotal = 0;
-        for (var stream of streams) {
-            viewersTotal += stream.viewers;
-        }
+    function getViewersTotal (callback) {
+        $http.get('https://api.twitch.tv/kraken/streams/summary').then(function (response) {
+            callback(response.data.viewers);
+        });
+    }
 
-        var viewerNb = Math.random() * viewersTotal;
-
+    function selectStream(link, viewerNb, callback) {
         var selectedStream;
         var remainingViewers = viewerNb;
-        for (var stream of streams) {
-            if (stream.viewers > remainingViewers) {
-                selectedStream = stream;
-                break;
+        $http.get(link).then(function (response) {
+            var streams = response.data.streams;
+            for (var stream of streams) {
+                if (stream.viewers > remainingViewers) {
+                    selectedStream = stream;
+                    break;
+                }
+                remainingViewers -= stream.viewers;
             }
-            remainingViewers -= stream.viewers;
-        }
 
-        return selectedStream;
+            if (selectedStream)
+                callback(selectedStream);
+            else
+                selectStream(response.data._links.next, remainingViewers, callback);
+        });
+    }
+
+    function selectRandomStream () {
+        $scope.updatingStream = true;
+        getViewersTotal(function (viewersTotal) {
+            var viewerNb = Math.random() * viewersTotal * 0.90;
+
+            selectStream('https://api.twitch.tv/kraken/streams?limit=100', viewerNb, function (stream) {
+                $scope.selectedStream = stream;
+                $scope.updatingStream = false;
+                $scope.lastStreamUpdate = new Date();
+            });
+        });
     }
 
     $scope.updateStream = function () {
-        $scope.updatingStream = true;
-        $http.get('https://api.twitch.tv/kraken/streams?limit=100', {}).then(function (response) {
-                var selectedStream = selectRandomStream(response.data.streams);
-                while ($scope.selectedStream && $scope.selectedStream.channel.display_name === selectedStream.channel.display_name) {
-                    selectedStream = selectRandomStream(response.data.streams);
-                }
-
-                $scope.selectedStream = selectedStream;
-                $scope.updatingStream = false;
-                $scope.lastStreamUpdate = new Date();
-                console.log(selectedStream);
-                });
+        selectRandomStream();
     }
 
     function updateTimer () {
