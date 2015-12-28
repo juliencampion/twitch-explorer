@@ -46,29 +46,36 @@ twitchApp.controller('twitchController', ['$scope', '$interval', '$http', functi
         });
     }
 
+    var nextStream;
+    $scope.loadingNextStream = false;
     function selectRandomStream () {
-        $scope.updatingStream = true;
+        $scope.loadingNextStream = true;
+        console.log('updating');
         getViewersTotal(function (viewersTotal) {
             var viewerNb = Math.random() * viewersTotal * 0.90;
-
             selectStream('https://api.twitch.tv/kraken/streams?limit=100', viewerNb, function (stream) {
-                $scope.selectedStream = stream;
-                $scope.updatingStream = false;
-                $scope.lastStreamUpdate = new Date();
+                nextStream = stream;
+                console.log('finished updating');
+                $scope.loadingNextStream = false;
             });
         });
     }
 
     $scope.updateStream = function () {
-        selectRandomStream();
+        $scope.selectedStream = nextStream;
+        nextStream = false;
+        $scope.lastStreamUpdate = new Date();
     }
 
     function updateTimer () {
-        if ($scope.autoSwitch && !$scope.updatingStream && $scope.remainingTime() <= 0)
+        if (!nextStream && !$scope.loadingNextStream)
+            selectRandomStream();
+
+        if ($scope.autoSwitch && nextStream && !$scope.loadingNextStream && $scope.remainingTime() <= 0)
             $scope.updateStream();
     }
 
-    $scope.updatingStream = false;
+    $scope.lastStreamUpdate = new Date(0);
 
     $scope.remainingTime = function () {
         return $scope.autoSwitchDelay - (new Date() - $scope.lastStreamUpdate) / 1000;
@@ -78,6 +85,5 @@ twitchApp.controller('twitchController', ['$scope', '$interval', '$http', functi
 
     $scope.autoSwitchDelay = 60;
 
-    $scope.updateStream();
     $interval(updateTimer, 1000);
 }]);

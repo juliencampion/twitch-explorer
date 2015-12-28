@@ -22,10 +22,9 @@
 
         <div id="stream-info" class="panel panel-info">
             <div class="panel-heading">
-                <h1 class="text-center" ng-show="updatingStream">Switching streams...</h1>
-                <h3 class="text-center" ng-hide="updatingStream">Stream information</h3>
+                <h3 class="text-center">Stream information</h3>
             </div>
-            <div class="panel-content" ng-hide="updatingStream">
+            <div class="panel-content">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-6">
@@ -41,7 +40,7 @@
             </div>
         </div>
 
-        <button class="btn btn-primary center-block" ng-click="updateStream()">Switch streams</button>
+        <button class="btn btn-primary center-block" ng-click="updateStream()" ng-disabled="loadingNextStream">Switch streams</button>
 
         <div id="view-options" class="panel panel-default">
             <div class="panel-heading">
