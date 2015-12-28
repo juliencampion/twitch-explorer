@@ -65,7 +65,6 @@ twitchApp.controller('twitchController', ['$scope', '$interval', '$http', functi
     $scope.updateStream = function () {
         $scope.selectedStream = nextStream;
         nextStream = false;
-        $scope.lastStreamUpdate = new Date();
     }
 
     function updateTimer () {
