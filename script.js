@@ -50,12 +50,10 @@ twitchApp.controller('twitchController', ['$scope', '$interval', '$http', functi
     $scope.loadingNextStream = false;
     function selectRandomStream () {
         $scope.loadingNextStream = true;
-        console.log('updating');
         getViewersTotal(function (viewersTotal) {
             var viewerNb = Math.random() * viewersTotal * 0.90;
             selectStream('https://api.twitch.tv/kraken/streams?limit=100', viewerNb, function (stream) {
                 nextStream = stream;
-                console.log('finished updating');
                 $scope.loadingNextStream = false;
             });
         });
