@@ -41,14 +41,5 @@
         </div>
 
         <button class="btn btn-primary center-block" ng-click="updateStream()" ng-disabled="loadingNextStream">Switch streams</button>
-
-        <div id="view-options" class="panel panel-default">
-            <div class="panel-heading">
-                <h3>Viewing options</h3>
-            </div>
-            <div class="panel-content">
-                <p><input type="checkbox" ng-model="autoSwitch"> Automatically switch streams every <input type="number" ng-model="autoSwitchDelay" ng-disabled="!autoSwitch"> seconds <small ng-show="autoSwitch">(Next switch in {{remainingTime() | number : 0}} seconds)</small></p>
-            </div>
-        </div>
     </body>
 </html>
